@@ -9,8 +9,8 @@ using System.Diagnostics;
 
 namespace SharpMik.Drivers
 {
-	public class WavDriver : VirtualDriver1
-	{
+	public class WavDriver : VirtualSoftwareDriver
+    {
 		BinaryWriter m_FileStream;
 
 		String m_FileName = "music.wav";
@@ -84,7 +84,7 @@ namespace SharpMik.Drivers
 
 		public override void Update()
 		{
-			uint done = VC_WriteBytes(m_Audiobuffer, BUFFERSIZE);
+			uint done = WriteBytes(m_Audiobuffer, BUFFERSIZE);
 			m_FileStream.Write(m_Audiobuffer,0,(int)done);										
 			dumpsize += done;
 			loc++;

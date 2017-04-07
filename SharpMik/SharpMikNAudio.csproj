@@ -43,9 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debugger.cs" />
     <Compile Include="Drivers\NaudioDriver.cs" />
     <Compile Include="Drivers\NoAudio.cs" />
-    <Compile Include="Drivers\VirtualDriver1.cs" />
     <Compile Include="Drivers\VirtualSoftwareDriver.cs" />
     <Compile Include="Drivers\WavDriver.cs" />
     <Compile Include="DSP\Idsp.cs" />

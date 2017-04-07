@@ -73,7 +73,8 @@ namespace SharpMik
 		public ushort       fadevol;      /* fading volume rate */
 		public short       panning;      /* panning position */
 		public byte       kick;         /* if true = sample has to be restarted */
-		public ushort       period;       /* period to play the sample at */
+        public byte       kick_flag;   /* kick has been true */
+        public ushort       period;       /* period to play the sample at */
 		public byte       nna;          /* New note action type + master/slave flags */
 
 		public byte       volflg;       /* volume envelope settings */
@@ -475,10 +476,23 @@ namespace SharpMik
 		public int scalefactor;
 		public SAMPLE sample;
 		public ModuleReader reader;
-	} 
+	}
+
+    /* This structure is used to query current playing voices status */
+    public class VOICEINFO
+    {
+        public INSTRUMENT i;            /* Current channel instrument */
+        public SAMPLE s;            /* Current channel sample */
+        public short panning;      /* panning position */
+        public sbyte volume;       /* channel's "global" volume (0..64) */
+        public ushort period;       /* period to play the sample at */
+        public byte kick;         /* if true = sample has been restarted */
+    }
 
 
-	public class SharpMikCommon
+
+
+    public class SharpMikCommon
 	{
 		#region enums
 		public enum Commands 
@@ -747,12 +761,12 @@ namespace SharpMik
 		/* These take effect immediately. */
 		public const int DMODE_SURROUND		=	0x0100; /* enable surround sound */
 		public const int DMODE_INTERP		=	0x0200; /* enable interpolation */
-		public const int DMODE_REVERSE		=	0x0400;	/* reverse stereo */
+		public const int DMODE_REVERSE		=	0x0400; /* reverse stereo */
+        public const int DMODE_NOISEREDUCTION = 0x1000; /* Low pass filtering */
 
+        /* Module-only Playback Flags */
 
-		/* Module-only Playback Flags */
-
-		public const int SF_OWNPAN		= 0x1000;
+        public const int SF_OWNPAN		= 0x1000;
 		public const int SF_UST_LOOP    = 0x2000;
 
 		public const int SF_EXTRAPLAYBACKMASK	= 0x3000;

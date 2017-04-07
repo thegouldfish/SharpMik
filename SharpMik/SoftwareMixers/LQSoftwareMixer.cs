@@ -15,10 +15,11 @@ namespace SharpMik.SoftwareMixers
 		const int BITSHIFT = 9;
 		const int CLICK_SHIFT = 6;
 		const int CLICK_BUFFER = (1 << CLICK_SHIFT);
+        int nLeftNR = 0;
+        int nRightNR = 0;
 
 
-
-		protected override bool MixerInit()
+        protected override bool MixerInit()
 		{
 			m_FracBits = FRACBITS;
 			m_ClickBuffer = CLICK_BUFFER;
@@ -120,21 +121,35 @@ namespace SharpMik.SoftwareMixers
 
 							m_IdxlPos = (long)m_CurrentVoiceInfo.RepeatStartPosition << FRACBITS;
 
-							if (s_TestModeOn && t == s_TestChannel)
+							if (MikDebugger.s_TestModeOn && t == MikDebugger.s_TestChannel)
 							{
 								Debug.WriteLine("here");
 							}
 
 							AddChannel(m_VcTickBuf, portion);
 
-							if (s_TestModeOn)
+							if (MikDebugger.s_TestModeOn)
 							{
-								Debug.WriteLine("{0}\t{1}", t, m_VcTickBuf[s_TestPlace]);
+								Debug.WriteLine("{0}\t{1}", t, m_VcTickBuf[MikDebugger.s_TestPlace]);
 							}
 						}
 					}
 
-					if (ModDriver.Reverb != 0)
+
+                    if ((ModDriver.Mode & SharpMikCommon.DMODE_NOISEREDUCTION) == SharpMikCommon.DMODE_NOISEREDUCTION)
+                    {
+                        if (m_IsStereo)
+                        {
+                            MixLowPass_Stereo(portion);                            
+                        }
+                        else
+                        {
+                            MixLowPass_Normal(portion);                            
+                        }
+                    }
+
+
+                    if (ModDriver.Reverb != 0)
 					{
 						if (m_IsStereo)
 						{
@@ -356,7 +371,45 @@ namespace SharpMik.SoftwareMixers
 		}
 
 
-		void AddChannel(int[] buff, int todo)
+
+
+        void MixLowPass_Stereo(int count)
+        {
+            int n1 = nLeftNR, n2 = nRightNR;            
+            int nr = count;
+            int place = 0;     
+            for (; nr != 0; nr--)
+            {
+                int vnr = m_VcTickBuf[place] >> 1;
+                m_VcTickBuf[place] = vnr + n1;
+                n1 = vnr;
+
+                vnr = m_VcTickBuf[place+1] >> 1;
+                m_VcTickBuf[place+1] = vnr + n2;
+                n2 = vnr;
+                place += 2;                
+            }
+            nLeftNR = n1;
+            nRightNR = n2;
+        }
+
+        void MixLowPass_Normal( int count)
+        {
+            int n1 = nLeftNR;
+            int nr = count;
+            int place = 0;
+            for (; nr != 0; nr--)
+            {
+                int vnr = m_VcTickBuf[place] >> 1;
+                m_VcTickBuf[place] = vnr + n1;
+                n1 = vnr;
+                place ++;
+            }
+            nLeftNR = n1;
+        }
+
+
+        void AddChannel(int[] buff, int todo)
 		{
 			long end, done;
 

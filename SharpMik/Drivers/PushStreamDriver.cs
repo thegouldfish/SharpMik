@@ -8,8 +8,11 @@ using SharpMik.Extentions;
 
 namespace SharpMik.Drivers
 {
-	public class MemoryStreamDriver : VirtualDriver1
-	{
+    
+
+
+	public class PushStreamDriver : VirtualSoftwareDriver
+    {
 		MemoryStream m_MemoryStream;
 		sbyte[] m_Audiobuffer;
 
@@ -21,7 +24,7 @@ namespace SharpMik.Drivers
 			get { return m_MemoryStream; }
 		}
 
-		public MemoryStreamDriver()
+		public PushStreamDriver()
 		{
 			m_Next = null;
 			m_Name = "Mem Writer";
@@ -65,7 +68,7 @@ namespace SharpMik.Drivers
 
 		public override void Update()
 		{
-			uint done = VC_WriteBytes(m_Audiobuffer, BUFFERSIZE);
+			uint done = WriteBytes(m_Audiobuffer, BUFFERSIZE);
 			m_MemoryStream.Write(m_Audiobuffer, 0, (int)done);
 		}
 	}

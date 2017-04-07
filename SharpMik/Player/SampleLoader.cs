@@ -79,6 +79,10 @@ namespace SharpMik.Player
 
 			int result,c_block=0;	/* compression bytes until next block */
 			ITPACK status = new ITPACK();
+            status.buf = 0;
+            status.last = 0;
+            status.bufbits = 0;
+            status.bits = 0;
 			ushort incnt = 0;
 
 			int index = 0;

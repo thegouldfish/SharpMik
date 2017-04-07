@@ -6,8 +6,8 @@ using SharpMik.Drivers;
 
 namespace SharpMik.Drivers
 {
-	public class NoAudio : VirtualDriver1
-	{
+	public class NoAudio : VirtualSoftwareDriver
+    {
 		uint BUFFERSIZE = 32768;
 		sbyte[] m_buffer;
 		public NoAudio()
@@ -43,7 +43,7 @@ namespace SharpMik.Drivers
 
 		public override void Update()
 		{
-			uint done = VC_WriteBytes(m_buffer, BUFFERSIZE);
+			uint done = WriteBytes(m_buffer, BUFFERSIZE);
 		}
 	}
 }

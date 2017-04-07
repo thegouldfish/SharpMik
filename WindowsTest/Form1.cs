@@ -58,7 +58,7 @@ namespace SharpMilk
 			PlayPauseMod.Enabled = false;
 			StopMod.Enabled = false;
 
-			//ModDriver.Mode = (ushort)(ModDriver.Mode | SharpMikCommon.DMODE_HQMIXER);
+			ModDriver.Mode = (ushort)(ModDriver.Mode | SharpMikCommon.DMODE_NOISEREDUCTION);
 			try
 			{
 				m_Player.Init<NaudioDriver>("");

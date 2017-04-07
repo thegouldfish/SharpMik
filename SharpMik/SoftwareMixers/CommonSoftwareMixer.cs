@@ -75,10 +75,7 @@ namespace SharpMik.SoftwareMixers
 		protected abstract uint WriteSamples(sbyte[] buf, uint todo );
 
 
-		// These are to aid in debugging
-		public static bool s_TestModeOn = false;
-		public static int s_TestPlace = 2;
-		public static int s_TestChannel = 23;
+
 
 		public bool Init()
 		{

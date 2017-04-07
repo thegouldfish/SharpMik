@@ -13,7 +13,7 @@ using System.Threading;
 
 namespace MikModUnitTest
 {
-	public class MemDriver : VirtualDriver1
+	public class MemDriver : VirtualSoftwareDriver
 	{
 		MemoryStream m_MemoryStream;
 		sbyte[] m_Audiobuffer;
@@ -70,7 +70,7 @@ namespace MikModUnitTest
 
 		public override void Update()
 		{
-			uint done = VC_WriteBytes(m_Audiobuffer, BUFFERSIZE);
+			uint done = WriteBytes(m_Audiobuffer, BUFFERSIZE);
 			m_MemoryStream.Write(m_Audiobuffer, 0, (int)done);
 		}
 	}

@@ -284,7 +284,7 @@ namespace SharpMik
 		{
 			byte[] d;
 
-			if (!UniExpand(m_CurrentRowIndex - m_WriteBufferPosition))
+			if (!UniExpand(m_WriteBufferPosition - m_CurrentRowIndex))
 			{
 				return null;
 			}

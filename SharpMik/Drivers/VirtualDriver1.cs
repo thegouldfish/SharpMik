@@ -19,38 +19,38 @@ namespace SharpMik.Drivers
 	 */
 	public abstract class VirtualDriver1 : IModDriver
 	{
-		class VoiceInfo 
-		{
-			public byte  Kick;					// =1 -> sample has to be restarted
-			public byte Active;					// =1 -> sample is playing
-			public ushort Flags;				// 16/8 bits looping/one-shot
-			public short Handle;				// identifies the sample
-			public uint Start;					// start index
-			public uint Size;					// sample size
-			public uint RepeatStartPosition;	// loop start
-			public uint RepeatEndPosition;		// loop end
-			public uint Frequency;				// current frequency
-			public int Volume;					// current volume
-			public int Panning;					// current panning position
+        class VirtualDriver1VoiceInfo
+        {
+            public byte Kick;                   // =1 -> sample has to be restarted
+            public byte Active;                 // =1 -> sample is playing
+            public ushort Flags;                // 16/8 bits looping/one-shot
+            public short Handle;                // identifies the sample
+            public uint Start;                  // start index
+            public uint Size;                   // sample size
+            public uint RepeatStartPosition;    // loop start
+            public uint RepeatEndPosition;      // loop end
+            public uint Frequency;              // current frequency
+            public int Volume;                  // current volume
+            public int Panning;                 // current panning position
 
-			public int Click;
-			public int LastValueLeft;
-			public int LastValueRight;
+            public int Click;
+            public int LastValueLeft;
+            public int LastValueRight;
 
-			public int RampVolume;
-			public int LeftVolumeFactor;
-			public int RightVolumeFactor;		// Volume factor in range 0-255
-			public int LeftVolumeOld;
-			public int RightVolumeOld;
+            public int RampVolume;
+            public int LeftVolumeFactor;
+            public int RightVolumeFactor;       // Volume factor in range 0-255
+            public int LeftVolumeOld;
+            public int RightVolumeOld;
 
-			public long CurrentSampleIndex;		// current index in the sample
-			public long CurrentIncrement;		// increment value
-		}
+            public long CurrentSampleIndex;     // current index in the sample
+            public long CurrentIncrement;       // increment value
+        }
 
 
-		short[][] m_Samples;
-		VoiceInfo [] m_VoiceInfos = null;
-		VoiceInfo m_CurrentVoiceInfo = null;
+        short[][] m_Samples;
+		VirtualDriver1VoiceInfo [] m_VoiceInfos = null;
+		VirtualDriver1VoiceInfo m_CurrentVoiceInfo = null;
 		long m_TickLeft = 0;
 		long m_SamplesThatFit = 0;
 		long m_VcMemory = 0;
@@ -464,11 +464,11 @@ namespace SharpMik.Drivers
 			if (m_VoiceInfos != null)
 				m_VoiceInfos = null;
 
-			m_VoiceInfos = new VoiceInfo[m_VcSoftChannel];
+			m_VoiceInfos = new VirtualDriver1VoiceInfo[m_VcSoftChannel];
 
 			for (t = 0; t < m_VcSoftChannel; t++)
 			{
-				m_VoiceInfos[t] = new VoiceInfo();
+				m_VoiceInfos[t] = new VirtualDriver1VoiceInfo();
 
 				m_VoiceInfos[t].Frequency = 10000;
 				m_VoiceInfos[t].Panning = (t & 1) == 1 ? SharpMikCommon.PAN_LEFT : SharpMikCommon.PAN_RIGHT;

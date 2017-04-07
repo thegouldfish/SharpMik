@@ -40,9 +40,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Debugger.cs" />
+    <Compile Include="Drivers\PullStreamDriver.cs" />
     <Compile Include="Drivers\VirtualSoftwareDriver.cs" />
     <Compile Include="SoftwareMixers\HQSoftwareMixer.cs" />
-    <Compile Include="Drivers\MemoryStreamDriver.cs" />
+    <Compile Include="Drivers\PushStreamDriver.cs" />
     <Compile Include="DSP\Idsp.cs" />
     <Compile Include="Loaders\AMFLoader.cs" />
     <Compile Include="Loaders\FARLoader.cs" />
@@ -56,7 +58,6 @@
     <Compile Include="Types\BinaryModule.cs" />
     <Compile Include="SharpMikCommon.cs" />
     <Compile Include="Drivers\NoAudio.cs" />
-    <Compile Include="Drivers\VirtualDriver1.cs" />
     <Compile Include="Drivers\WavDriver.cs" />
     <Compile Include="Extentions\ExtentionMethods.cs" />
     <Compile Include="Interfaces\IModDriver.cs" />

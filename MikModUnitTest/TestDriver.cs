@@ -7,7 +7,7 @@ using SharpMik.Drivers;
 
 namespace MikModUnitTest
 {
-	public class TestDriver : VirtualDriver1
+	public class TestDriver : VirtualSoftwareDriver
 	{
 		byte[] m_CWav;
 
@@ -73,7 +73,7 @@ namespace MikModUnitTest
 
 		public override void Update()
 		{
-			uint done = VC_WriteBytes(m_Audiobuffer, BUFFERSIZE);
+			uint done = WriteBytes(m_Audiobuffer, BUFFERSIZE);
 
 			for (uint i = 0; i < done; i++)
 			{
