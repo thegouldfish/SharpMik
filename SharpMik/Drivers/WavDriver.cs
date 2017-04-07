@@ -103,8 +103,8 @@ namespace SharpMik.Drivers
 			ushort numberOfBytes = (ushort)((ModDriver.Mode & SharpMikCommon.DMODE_16BITS) == SharpMikCommon.DMODE_16BITS ? 2 : 1 );
 
 			m_FileStream.Write(channelCount);
-			m_FileStream.Write((uint)ModDriver.MixFreq);
-			int blah = ModDriver.MixFreq * channelCount * numberOfBytes;
+			m_FileStream.Write((uint)ModDriver.MixFrequency);
+			int blah = ModDriver.MixFrequency * channelCount * numberOfBytes;
 			m_FileStream.Write((uint)(blah));
 			m_FileStream.Write((ushort)(channelCount * numberOfBytes));
 			m_FileStream.Write((ushort)((ModDriver.Mode & SharpMikCommon.DMODE_16BITS) == SharpMikCommon.DMODE_16BITS ? 16 : 8));

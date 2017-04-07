@@ -133,11 +133,9 @@ namespace SharpMik.Interfaces
 
 
 		protected void S3MIT_ProcessCmd(byte cmd,byte inf,uint flags)
-		{
-			byte hi,lo;
-
-			lo=(byte)(inf&0xf);
-			hi=(byte)(inf>>4);
+		{			
+			byte lo=(byte)(inf&0xf);
+			
 
 			/* process S3M / IT specific command structure */
 

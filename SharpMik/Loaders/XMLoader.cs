@@ -778,26 +778,25 @@ namespace SharpMik.Loaders
 			mh.tempo       =m_Reader.Read_Intel_ushort();
 			mh.bpm         =m_Reader.Read_Intel_ushort();
 			
-			if(mh.bpm == 0) 
+			if(mh.bpm == 0 || mh.songlength > 256) 
 			{
 				m_LoadError=MMERR_NOT_A_MODULE;
 				return false;
 			}
-			m_Reader.Read_bytes(mh.orders,256);
 
-
-			if(m_Reader.isEOF()) 
-			{
-				m_LoadError = MMERR_LOADING_HEADER;
-				return false;
-			}
+            m_Reader.Read_bytes(mh.orders,mh.songlength);
+            if (!m_Reader.Seek((int)(mh.headersize + 60), SeekOrigin.Begin) || m_Reader.isEOF())
+            {
+                m_LoadError = MMERR_LOADING_HEADER;
+                return false;
+            }
 
 			/* set module variables */
 			m_Module.initspeed = (byte)mh.tempo;         
 			m_Module.inittempo = mh.bpm;
 
 			tracker = mh.trackername.ToCharArray();
-			for(t=tracker.Length-1;(tracker[t]<=' ')&&(t>=0);t--) 
+			for(t=tracker.Length-1; (t >= 0) && (tracker[t]<=' ');t--) 
 				tracker[t]=(char)0;
 	
 			/* some modules have the tracker name empty */

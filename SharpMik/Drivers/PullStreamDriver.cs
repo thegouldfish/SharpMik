@@ -92,9 +92,14 @@ namespace SharpMik.Drivers
 
     public class PullStreamDriver : VirtualSoftwareDriver
     {
+        sbyte[] m_TempBuffer;
+
+
         public bool IsPlaying { get; set; }
 
         public Stream Stream { get; set; }
+
+
 
         public PullStreamDriver()
         {
@@ -106,6 +111,7 @@ namespace SharpMik.Drivers
             m_AutoUpdating = true;
             IsPlaying = false;
             Stream = new PullAudioStream(this);
+
         }
 
 
@@ -142,14 +148,17 @@ namespace SharpMik.Drivers
 
         public uint GetData(byte[] buffer, int offset, int count)
         {
-            sbyte[] data = new sbyte[count];
-            uint done = WriteBytes(data, (uint)count);
-
-            for (int i = 0; i < count; i++)
+            if (m_TempBuffer == null)
             {
-                buffer[i] = (byte)data[i];
+                m_TempBuffer = new sbyte[count];
+            }
+            else if (m_TempBuffer.Length < count)
+            {
+                Array.Resize(ref m_TempBuffer, count);
             }
 
+            uint done = WriteBytes(m_TempBuffer, (uint)count);
+            Array.Copy(m_TempBuffer, buffer, done);
             
             return done;
         }

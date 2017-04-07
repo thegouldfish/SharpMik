@@ -228,6 +228,12 @@ namespace SharpMik.Player
         #endregion
 
 
+        static byte NumberOfVoices(Module mod)
+        {
+            return ModDriver.md_sngchn < mod.numvoices ? ModDriver.md_sngchn : mod.numvoices;
+        }
+
+
         // This block of Code is for all the module effects.
         #region effects
 
@@ -761,6 +767,10 @@ namespace SharpMik.Player
                 else
                 {
                     a.pat_reppos = (short)(mod.patpos - 1); /* set reppos - can be (-1) */
+
+                    /* emulate the FT2 pattern loop (E60) bug:
+                     * http://milkytracker.org/docs/MilkyTracker.html#fxE6x
+                     * roadblas.xm plays correctly with this. */
                     if ((flags & SharpMikCommon.UF_FT2QUIRKS) == SharpMikCommon.UF_FT2QUIRKS)
                         mod.patbrk = mod.patpos;
                 }
@@ -2118,12 +2128,12 @@ namespace SharpMik.Player
             switch (dat)
             {
                 case 0x0: /* past note cut */
-                for (t = 0; t < ModDriver.md_sngchn; t++)
+                for (t = 0; t < NumberOfVoices(mod); t++)
                     if (mod.voice[t].master == a)
                         mod.voice[t].main.fadevol = 0;
                 break;
                 case 0x1: /* past note off */
-                for (t = 0; t < ModDriver.md_sngchn; t++)
+                for (t = 0; t < NumberOfVoices(mod); t++)
                     if (mod.voice[t].master == a)
                     {
                         mod.voice[t].main.keyoff |= SharpMikCommon.KEY_OFF;
@@ -2133,7 +2143,7 @@ namespace SharpMik.Player
                     }
                 break;
                 case 0x2: /* past note fade */
-                for (t = 0; t < ModDriver.md_sngchn; t++)
+                for (t = 0; t < NumberOfVoices(mod); t++)
                     if (mod.voice[t].master == a)
                         mod.voice[t].main.keyoff |= SharpMikCommon.KEY_FADE;
                 break;
@@ -2322,7 +2332,7 @@ namespace SharpMik.Player
 
         static void Player_Stop_internal()
         {
-            if (ModDriver.Sfxchn == 0)
+            if (ModDriver.SoundFXChannel == 0)
             {
                 ModDriver.MikMod_DisableOutput_internal();
             }
@@ -2546,7 +2556,7 @@ namespace SharpMik.Player
                 s_Module.sngpos = (short)pos;
                 s_Module.vbtick = s_Module.sngspd;
 
-                for (t = 0; t < ModDriver.md_sngchn; t++)
+                for (t = 0; t < NumberOfVoices(s_Module); t++)
                 {
                     ModDriver.Voice_Stop_internal(t);
                     s_Module.voice[t].main.i = null;
@@ -2647,6 +2657,62 @@ namespace SharpMik.Player
             }
 
             return result;
+        }
+
+
+        public static void Player_NextPosition()
+        {            
+            if (s_Module != null)
+            {
+                int t;
+
+                s_Module.forbid = true;
+                s_Module.posjmp = 3;
+                s_Module.patbrk = 0;
+                s_Module.vbtick = s_Module.sngspd;
+
+                for (t = 0; t < NumberOfVoices(s_Module); t++)
+                {
+                    ModDriver.Voice_Stop_internal((byte)t);
+                    s_Module.voice[t].main.i = null;
+                    s_Module.voice[t].main.s = null;
+                }
+                for (t = 0; t < s_Module.numchn; t++)
+                {
+                    s_Module.control[t].main.i = null;
+                    s_Module.control[t].main.s = null;
+                }
+
+                s_Module.forbid = false;
+            }            
+        }
+
+        public static void Player_PrevPosition()
+        {            
+            if (s_Module != null)
+            {
+                int t;
+
+                s_Module.forbid = true;
+                s_Module.posjmp = 1;
+                s_Module.patbrk = 0;
+                s_Module.vbtick = s_Module.sngspd;
+
+                for (t = 0; t < NumberOfVoices(s_Module); t++)
+                {
+                    ModDriver.Voice_Stop_internal((byte)t);                    
+                    s_Module.voice[t].main.i = null;
+                    s_Module.voice[t].main.s = null;
+                }
+                for (t = 0; t < s_Module.numchn; t++)
+                {
+                    s_Module.control[t].main.i = null;
+                    s_Module.control[t].main.s = null;
+                }
+
+                s_Module.forbid = false;
+            }
+            
         }
 
 
@@ -2814,7 +2880,7 @@ namespace SharpMik.Player
             SAMPLE s;
 
             mod.totalchn = mod.realchn = 0;
-            for (channel = 0; channel < ModDriver.md_sngchn; channel++)
+            for (channel = 0; channel < NumberOfVoices(mod); channel++)
             {
                 aout = mod.voice[channel];
                 i = aout.main.i;
@@ -3188,7 +3254,7 @@ namespace SharpMik.Player
                     {
                         int t;
 
-                        for (t = 0; t < ModDriver.md_sngchn; t++)
+                        for (t = 0; t < NumberOfVoices(mod); t++)
                             if ((!ModDriver.Voice_Stopped_internal((sbyte)t)) &&
                                (mod.voice[t].masterchn == channel) &&
                                (a.main.sample == mod.voice[t].main.sample))
@@ -3641,7 +3707,7 @@ namespace SharpMik.Player
             int a = 0;
             uint t, k, tvol, pp;
 
-            for (t = 0; t < ModDriver.md_sngchn; t++)
+            for (t = 0; t < NumberOfVoices(mod); t++)
                 if (((mod.voice[t].main.kick == SharpMikCommon.KICK_ABSENT) ||
                      (mod.voice[t].main.kick == SharpMikCommon.KICK_ENV)) &&
                    ModDriver.Voice_Stopped_internal((sbyte)t))
@@ -3651,7 +3717,7 @@ namespace SharpMik.Player
             t = uint.MaxValue;
 
 
-            for (k = 0; k < ModDriver.md_sngchn; k++, a++)
+            for (k = 0; k < NumberOfVoices(mod); k++, a++)
             {
                 /* allow us to take over a nonexisting sample */
                 if (mod.voice[a].main.s == null)

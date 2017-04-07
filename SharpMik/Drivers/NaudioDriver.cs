@@ -19,7 +19,7 @@ namespace SharpMik.Drivers
 			int bitness = (ModDriver.Mode & SharpMikCommon.DMODE_16BITS) == SharpMikCommon.DMODE_16BITS ? 16 : 8;
 			int channels = (ModDriver.Mode & SharpMikCommon.DMODE_STEREO) == SharpMikCommon.DMODE_STEREO ? 2 : 1;
 
-			waveFormat = new WaveFormat(ModDriver.MixFreq, bitness, channels);
+			waveFormat = new WaveFormat(ModDriver.MixFrequency, bitness, channels);
 
 			m_Driver = driver;
 		}

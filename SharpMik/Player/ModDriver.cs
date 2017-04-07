@@ -25,8 +25,12 @@ namespace SharpMik.Player
 						SharpMikCommon.DMODE_SOFT_SNDFX;
 
 
-		internal static byte md_numchn = 0, md_sngchn = 0, md_sfxchn = 0;
-		static byte md_hardchn = 0, md_softchn = 0;
+        internal static byte md_numchn = 0;
+        internal static byte md_sngchn = 0;
+        internal static byte md_sfxchn = 0;
+
+        static byte md_hardchn = 0;
+        static byte md_softchn = 0;
 		static ushort md_mixfreq = 44100;
 		static ushort md_bpm = 125;
 		static byte md_reverb = 0;
@@ -39,7 +43,7 @@ namespace SharpMik.Player
 
 		static SAMPLE[] md_sample;
 		#endregion
-
+        
 
 		#region Accessors
 		public static byte PanSeperation
@@ -48,7 +52,7 @@ namespace SharpMik.Player
 			set { md_pansep = value < 129 ? value: (byte)128; }
 		}
 
-		public static byte SoftChn
+		public static byte SoftwareChannel
 		{
 			get { return md_softchn; }
 		}
@@ -66,7 +70,7 @@ namespace SharpMik.Player
 			set { md_mode = value; }
 		}
 
-		public static ushort MixFreq
+		public static ushort MixFrequency
 		{
 			get { return md_mixfreq; }
 			set { md_mixfreq = value; }
@@ -83,7 +87,7 @@ namespace SharpMik.Player
 			set { md_reverb = value; }
 		}
 
-		public static byte Sfxchn
+		public static byte SoundFXChannel
 		{
 			get { return md_sfxchn; }
 			set { md_sfxchn = value; }
@@ -105,6 +109,9 @@ namespace SharpMik.Player
 		{
 			get { return m_Driver; }
 		}
+
+
+
 		#endregion
 
 

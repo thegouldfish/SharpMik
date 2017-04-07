@@ -41,8 +41,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Debugger.cs" />
+    <Compile Include="Depackers\IDepacker.cs" />
     <Compile Include="Drivers\PullStreamDriver.cs" />
     <Compile Include="Drivers\VirtualSoftwareDriver.cs" />
+    <Compile Include="Player\ModStream.cs" />
     <Compile Include="SoftwareMixers\HQSoftwareMixer.cs" />
     <Compile Include="Drivers\PushStreamDriver.cs" />
     <Compile Include="DSP\Idsp.cs" />

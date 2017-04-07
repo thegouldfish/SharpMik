@@ -347,7 +347,9 @@ namespace SharpMik.Loaders
 			SAMPLE q;
 			ushort []track_remap;
 			uint samplepos;
-			sbyte[] channel_remap = new sbyte[16];
+            uint fileend;
+
+            sbyte[] channel_remap = new sbyte[16];
 
 			/* try to read module header  */
 			mh.id = m_Reader.Read_String(3);
@@ -486,7 +488,10 @@ namespace SharpMik.Loaders
 				s.c2spd     =m_Reader.Read_Intel_ushort();
 				if(s.c2spd==8368) s.c2spd=8363;
 				s.volume    =m_Reader.Read_byte();
-				if(mh.version>=11) {
+                /* "the tribal zone.amf" and "the way its gonna b.amf" by Maelcum
+                 * are the only version 10 files I can find, and they have 32 bit
+                 * reppos and repend, not 16. */
+                if (mh.version>=10) { // Was 11
 					s.reppos    =m_Reader.Read_Intel_uint();
 					s.repend    =m_Reader.Read_Intel_uint();
 				} else {
@@ -552,14 +557,39 @@ namespace SharpMik.Loaders
 
 			/* compute sample offsets */
 			samplepos = (uint)m_Reader.Tell();
-			for(realsmpcnt=t=0;t<m_Module.numsmp;t++)
-				if(realsmpcnt<m_Module.samples[t].seekpos)
-					realsmpcnt=(int)m_Module.samples[t].seekpos;
-			for(t=1;t<=realsmpcnt;t++) 
+
+            if (m_Reader.isEOF())
+            {
+                m_LoadError = MMERR_LOADING_SAMPLEINFO;
+                return false;
+            }
+
+            m_Reader.Seek(0, SeekOrigin.End);
+            fileend = (uint)m_Reader.Tell();
+
+            m_Reader.Seek((int)samplepos, SeekOrigin.Begin);
+
+            for (realsmpcnt = t = 0; t < m_Module.numsmp; t++)
+            {
+                if (realsmpcnt < m_Module.samples[t].seekpos)
+                {
+                    realsmpcnt = (int)m_Module.samples[t].seekpos;
+                }
+            }
+
+            for (t=1;t<=realsmpcnt;t++) 
 			{
 				int place = t;
+                u = 0;
+                
 				do 
 				{
+                    if (++u == m_Module.numsmp)
+                    {
+                        m_LoadError = MMERR_LOADING_SAMPLEINFO;
+                        return false;
+                    }
+
 					q = m_Module.samples[place];
 					place++;
 				} while (q.seekpos != t);
@@ -567,6 +597,12 @@ namespace SharpMik.Loaders
 				q.seekpos=samplepos;
 				samplepos+=q.length;
 			}
+
+            if (samplepos > fileend)
+            {
+                m_LoadError = MMERR_LOADING_SAMPLEINFO;
+                return false;
+            }
 		
 			return true;
 		}

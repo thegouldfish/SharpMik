@@ -75,9 +75,11 @@ namespace SharpMik.SoftwareMixers
 		protected abstract uint WriteSamples(sbyte[] buf, uint todo );
 
 
+        public delegate void VC_CallbackDelegate(int[] buffer, int size);
 
+        public event VC_CallbackDelegate VC_Callback;
 
-		public bool Init()
+        public bool Init()
 		{
 			MixerInit();
 
@@ -89,14 +91,14 @@ namespace SharpMik.SoftwareMixers
 
 			m_Rvc = new int[8];
 
-			m_Rvc[0] = (5000 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[1] = (5078 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[2] = (5313 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[3] = (5703 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[4] = (6250 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[5] = (6953 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[6] = (7813 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
-			m_Rvc[7] = (8828 * ModDriver.MixFreq) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[0] = (5000 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[1] = (5078 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[2] = (5313 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[3] = (5703 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[4] = (6250 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[5] = (6953 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[6] = (7813 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
+			m_Rvc[7] = (8828 * ModDriver.MixFrequency) / (REVERBERATION * m_ReverbMultipler);
 
 
 			m_RvBuf = new int[2][][];
@@ -113,6 +115,13 @@ namespace SharpMik.SoftwareMixers
 			return false;
 		}
 
+        protected void FireCallBack(int portion)
+        {
+            if (VC_Callback != null)
+            {
+                VC_Callback(m_VcTickBuf, portion);
+            }
+        }
 
 		public void DeInit()
 		{
@@ -172,7 +181,7 @@ namespace SharpMik.SoftwareMixers
 		{
 			int t;
 
-			if ((m_VcSoftChannel = ModDriver.SoftChn) == 0)
+			if ((m_VcSoftChannel = ModDriver.SoftwareChannel) == 0)
 			{
 				return true;
 			}

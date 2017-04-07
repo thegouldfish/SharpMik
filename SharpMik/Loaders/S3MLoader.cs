@@ -145,7 +145,7 @@ namespace SharpMik.Loaders
 				if(m_Reader.isEOF()) 
 				{
 					m_LoadError = MMERR_LOADING_PATTERN;
-					return true;
+					return false;
 				}
 
 				if (flag != 0)
@@ -174,7 +174,8 @@ namespace SharpMik.Loaders
 					row++;
 				}
 			}
-			return false;
+
+            return true;
 		}    
 
 		bool S3M_ReadPattern()
@@ -412,7 +413,7 @@ namespace SharpMik.Loaders
 				s.scrs = m_Reader.Read_String(4);
 
 				/* ScreamTracker imposes a 64000 bytes (not 64k !) limit */
-				if (s.length > 64000)
+				if (s.length > 64000 && tracker == 1)
 					s.length = 64000;
 
 				if(m_Reader.isEOF()) {
@@ -448,7 +449,7 @@ namespace SharpMik.Loaders
 			{
 				/* seek to pattern position (+2 skip pattern length) */
 				m_Reader.Seek(((paraptr[m_Module.numins+t])<<4)+2, SeekOrigin.Begin);
-				if(S3M_GetNumChannels()) 
+				if(!S3M_GetNumChannels()) 
 					return false;
 			}
 
