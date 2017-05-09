@@ -44,7 +44,7 @@ namespace SharpMik.SoftwareMixers
 
 
 
-		protected short[][] m_Samples;
+		protected List<short[]> m_Samples;
 		protected VoiceInfo[] m_VoiceInfos = null;
 		protected VoiceInfo m_CurrentVoiceInfo = null;
 		protected long m_TickLeft = 0;
@@ -83,7 +83,7 @@ namespace SharpMik.SoftwareMixers
 		{
 			MixerInit();
 
-			m_Samples = new short[SharpMikCommon.MAXSAMPLEHANDLES][];
+            m_Samples = new List<short[]>();
 
 			m_VcTickBuf = new int[TICKLSIZE];
 
@@ -320,18 +320,18 @@ namespace SharpMik.SoftwareMixers
 			{
 				return 0;
 			}
-
+            
 			/* Find empty slot to put sample address in */
-			for (handle = 0; handle < SharpMikCommon.MAXSAMPLEHANDLES; handle++)
+			for (handle = 0; handle < m_Samples.Count; handle++)
 			{
 				if (m_Samples[handle] == null)
 					break;
 			}
 
-			if (handle == SharpMikCommon.MAXSAMPLEHANDLES)
+
+			if (handle == m_Samples.Count)
 			{
-				// Throw an exception so it reaches all the way up to the loader to show the load failed.
-				throw new Exception("Out of handles");
+                m_Samples.Add(null);
 			}
 
 			/* Reality check for loop settings */
@@ -393,7 +393,7 @@ namespace SharpMik.SoftwareMixers
 
 		public void SampleUnload(short handle)
 		{
-			if (handle < SharpMikCommon.MAXSAMPLEHANDLES)
+			if (handle < m_Samples.Count)
 			{
 				m_Samples[handle] = null;
 			}
