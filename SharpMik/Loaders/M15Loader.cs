@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using SharpMik.Interfaces;
 using SharpMik;
-
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	class M15Loader : IModLoader
+    [ModFileExtentions(".m15")]
+    public class M15Loader : IModLoader
 	{
 		class M15SampleInfo 
 		{

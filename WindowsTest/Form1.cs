@@ -82,6 +82,18 @@ namespace SharpMilk
 		private void OpenMod_Click(object sender, EventArgs e)
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
+            var extentions = SharpMikCommon.ModFileExtentions;
+
+            String filters = "All (*.*)|*.*|";
+            foreach (var item in extentions)
+            {
+                filters +=  "(*"+item + ")|*" + item + "|";
+            }
+
+            if (filters.Length > 0)
+            {
+                dialog.Filter = filters.Substring(0, filters.Length - 1);
+            }
 
 			DialogResult result = dialog.ShowDialog();
 

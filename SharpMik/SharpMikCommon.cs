@@ -1,5 +1,10 @@
 ﻿using System;
 using SharpMik.IO;
+using System.Reflection;
+using System.Linq;
+using SharpMik.Interfaces;
+using SharpMik.Attributes;
+using System.Collections.Generic;
 
 namespace SharpMik
 {
@@ -604,7 +609,8 @@ namespace SharpMik
 
 
 		/* IT Volume column effects */
-		public enum ITColumnEffect{
+		public enum ITColumnEffect
+        {
 			VOL_VOLUME = 1,
 			VOL_PANNING,
 			VOL_VOLSLIDE,
@@ -620,24 +626,17 @@ namespace SharpMik
 			MuteRangeExclusive,
 			MuteList,
 			MuteAll,
-		}
+		};
 		#endregion
 
 
 		#region consts
 
-		public static String[] s_fileTypes =
-		{
-			"mod",
-			"669",
-			"ult",
-			"s3m",
-			"xm",
-			"it",
-			"mtm",
-			"far",
-			"med"
-		};
+
+
+
+
+
 
 		public const int Octave = 12;
 
@@ -769,9 +768,7 @@ namespace SharpMik
         public const int SF_OWNPAN		= 0x1000;
 		public const int SF_UST_LOOP    = 0x2000;
 
-		public const int SF_EXTRAPLAYBACKMASK	= 0x3000;
-
-		public const int MAXSAMPLEHANDLES = 384;
+		public const int SF_EXTRAPLAYBACKMASK	= 0x3000;		
 
 		public static short[] Npertab = 
 		{
@@ -791,15 +788,49 @@ namespace SharpMik
 			8363,8413,8463,8529,8581,8651,8723,8757,
 			7895,7941,7985,8046,8107,8169,8232,8280
 		};
-		#endregion
+        #endregion
 
 
 
-		#region Helper functions
+        #region Helper functions
+
+        private static String[] s_FileTypes;
+
+        public static String[] ModFileExtentions
+        {
+            get
+            {
+                if (s_FileTypes == null)
+                {
+                    var extentions = new List<String>();
+                    var list = Assembly.GetExecutingAssembly().GetTypes().Where(x => x.IsSubclassOf(typeof(IModLoader)));
+
+                    foreach (var item in list)
+                    {
+                        var attributes = item.GetCustomAttributes(typeof(ModFileExtentionsAttribute),false);                                             
+                        foreach (var attribute in attributes)
+                        {
+                            var modExtention = attribute as ModFileExtentionsAttribute;
+
+                            if (modExtention != null)
+                            {
+                                extentions.AddRange(modExtention.FileExtentions);
+                            }
+                        }
+                    }
+
+                    s_FileTypes = extentions.Distinct().ToArray();
+                }
+
+                return s_FileTypes;
+            }
+        }
+
+
 		public static bool MatchesExtentions(String filename)
 		{
 			bool match = false;
-			foreach (string ext in s_fileTypes)
+			foreach (string ext in ModFileExtentions)
 			{
 				string tolower = filename.ToLower();
 

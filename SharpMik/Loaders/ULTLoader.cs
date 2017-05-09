@@ -5,10 +5,12 @@ using System.Text;
 using SharpMik.Interfaces;
 using System.IO;
 using SharpMik;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class ULTLoader : IModLoader
+    [ModFileExtentions(".ult")]
+    public class ULTLoader : IModLoader
 	{
 		struct ULTHEADER 
 		{

@@ -8,10 +8,12 @@ using System.IO;
 
 using SharpMik.Extentions;
 using SharpMik;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class S3MLoader : IModLoader
+    [ModFileExtentions(".s3m")]
+    public class S3MLoader : IModLoader
 	{
 		/* header */
 		class S3MHEADER

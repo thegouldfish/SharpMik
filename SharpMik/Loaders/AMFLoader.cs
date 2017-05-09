@@ -6,10 +6,13 @@ using System.IO;
 
 using SharpMik.Interfaces;
 using SharpMik;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	class AMFLoader : IModLoader
+
+    [ModFileExtentions(".amf")]
+	public class AMFLoader : IModLoader
 	{
 		/*========== Module structure */
 

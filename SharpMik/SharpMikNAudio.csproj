@@ -43,6 +43,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\ModExtentionAttribute.cs" />
     <Compile Include="Debugger.cs" />
     <Compile Include="Drivers\NaudioDriver.cs" />
     <Compile Include="Drivers\NoAudio.cs" />

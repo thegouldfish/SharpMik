@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using SharpMik.Interfaces;
 using System.IO;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class FARLoader : IModLoader
+    [ModFileExtentions(".far")]
+    public class FARLoader : IModLoader
 	{
 		/*========== Module structure */
 

@@ -5,10 +5,12 @@ using System.Text;
 using SharpMik.Interfaces;
 using SharpMik;
 using System.IO;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class _669Loader : IModLoader
+    [ModFileExtentions(".669")]
+    public class _669Loader : IModLoader
 	{
 			class S69HEADER 
 			{   

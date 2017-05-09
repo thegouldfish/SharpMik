@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 
 using SharpMik.Interfaces;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class MTMLoader : IModLoader
+    [ModFileExtentions(".mtm")]
+    public class MTMLoader : IModLoader
 	{
 		/*========== Module structure */
 

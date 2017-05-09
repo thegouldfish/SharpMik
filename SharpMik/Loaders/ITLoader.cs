@@ -8,10 +8,12 @@ using SharpMik.Extentions;
 using SharpMik;
 using System.IO;
 using System.Diagnostics;
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
-	public class ITLoader : IModLoader
+    [ModFileExtentions(".it")]
+    public class ITLoader : IModLoader
 	{
 		/* header */
 		class ITHEADER 

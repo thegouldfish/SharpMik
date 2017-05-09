@@ -12,9 +12,6 @@ namespace SharpMik.Interfaces
 {
 	public abstract class IModLoader
 	{
-
-
-
 		private munitrk m_Tracker;
 
 		#region protected variables		
@@ -26,6 +23,8 @@ namespace SharpMik.Interfaces
 		protected Module m_Module;		
 
 		protected String m_LoadError;
+
+        public virtual String[] FileExtentions { get; }
 		#endregion
 
 

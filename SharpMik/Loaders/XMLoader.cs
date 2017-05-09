@@ -7,10 +7,11 @@ using SharpMik.Interfaces;
 using SharpMik.Extentions;
 using SharpMik;
 using System.IO;
-
+using SharpMik.Attributes;
 
 namespace SharpMik.Loaders
 {
+    [ModFileExtentions(".xm")]
 	public class XMLoader : IModLoader
 	{
 		/*========== Module structure */
